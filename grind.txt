@@ -1,0 +1,41 @@
+Endless procedurally generated Action RPG.
+
+You start in a little town with a resurrection stone and shop.
+Around it is a newbie area with the simplest enemies.
+Slow, melee, low health...
+
+Areas with tougher monsters are generated around the first area.
+The mobs will spawn in groups of one or more creatures.
+When they see you they will hunt you until you're out of range again no matter how far you run.
+The starting town will have strong guards to take care of them if you took on something too powerful and manage to get back to base.
+They will return to the spawn point if you lose them.
+Areas will overlap to avoid empty areas.
+
+For each new area, attributes and abilities of the mobs increase randomly.
+Range, power, health, speed...
+
+I want to give each randomly generated mob a name, so the player can associate with it's abilities easier.
+There can be a database of monster types defining the limits of each monster.
+A slime can for instance have limited max speed and line of sight. It may have skills like poison, teleport and split.
+They should also have a standard size, so we can describe a relative size in the monster name.
+The parameters of a new mob is randomly generated, then you look up which monsters may fit the description and pick one at random.
+So if slime fits, the base name is Slime. But you also put on descriptive adjectives like, Small spitting slime.
+
+If there is no match, use a generic name, perhaps abomination. Perhaps these should be human(oid).
+Rogue adventurers essentially.
+
+
+I want about the same pace as Rage Of Mages.
+Rather slow movement so you have time to think.
+Tough enemies, they shouldn't die in just a few hits. Most strikes should fail to damage in the beginning.
+As you grow in skill you'll be more likely to do damage.
+
+Click on enemy to set priority target. If you're just in range target is automatically set.
+
+Fight mechanics
+When a player or mob makes an attack. First set a target area within which the attack will hit.
+Then the attack motion takes place, during which the target may determine this area and if you see through the attack you can
+try to dodge or block.
+This information can then be used for animations when the game gets graphics.
+Attacks will have different motion time and discover difficulty. 
+Your ability to discover can increase with experience as well as ability to dodge and block.
