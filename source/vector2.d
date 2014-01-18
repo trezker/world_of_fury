@@ -65,6 +65,11 @@ struct Vector2 {
 		return x*x+y*y;
 	}
 	
+	unittest {
+		Vector2 a = Vector2(3, 4);
+		assert(a.Length == 5);
+	}
+	
 	Vector2 Normalized() const @property {
 		auto l = Length;
 		return Vector2(x/l, y/l);

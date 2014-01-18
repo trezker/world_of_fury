@@ -10,11 +10,14 @@ import allegro5.allegro_ttf;
 import allegro5.allegro_color;
 
 import wof.world;
+import std.stdio;
 
-int main(char[][] args)
-{
-	return al_run_allegro(
-	{
+class Test {
+	int foo = 1;
+}
+
+int main(char[][] args) {
+	return al_run_allegro({
 		al_init();
 		
 		ALLEGRO_DISPLAY* display = al_create_display(800, 600);
@@ -62,6 +65,12 @@ int main(char[][] args)
 							case ALLEGRO_KEY_ESCAPE:
 							{
 								exit = true;
+								break;
+							}
+							case ALLEGRO_KEY_T:
+							{
+								writeln("update");
+								world.Update(0.02);
 								break;
 							}
 							default:

@@ -5,13 +5,15 @@ import std.random;
 
 import allegro5.allegro;
 import allegro5.allegro_primitives;
+import std.stdio;
 
 class World {
 private:
 	Mob[] mobs;
-	Mob player = new Mob;
+	Mob player;
 public:
 	void Init() {
+		player = new Mob(this);
 		player.Size = 10;
 		player.Faction = 1;
 		player.Color = ALLEGRO_COLOR(0, 0, 1, 1);
@@ -34,17 +36,21 @@ public:
 			default:
 		}
 	}
+	
+	Mob[] Get_area_mobs(Vector2 center, float radius) {
+		return mobs;
+	}
 
 	void Update (float dt) {
 		if(mobs.length < 10) {
-			auto m = new Mob;
+			auto m = new Mob(this);
 			m.Position = Vector2(uniform(0.0, 800.0), uniform(0.0, 600.0));
 			m.Target_position = Vector2(uniform(0.0, 800.0), uniform(0.0, 600.0));
 			m.Size = 10;
 			mobs~= m;
 		}
 
-		foreach (m; mobs) {
+		foreach (ref m; mobs) {
 			m.Update(dt);
 		}
 		

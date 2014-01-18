@@ -4,6 +4,7 @@ import wof.mob;
 import wof.vector2;
 import allegro5.allegro;
 import allegro5.allegro_primitives;
+import std.stdio;
 
 enum Skillstate {
 	COOLDOWN,
@@ -31,8 +32,11 @@ public:
 	}
 	
 	bool In_range() const @property {
-		float d = (target.Position - owner.Position).Length - owner.Size;
-		if(d <= range) {
+		if(target is null)
+			return false;
+		float d = (target.Position - owner.Position).Length;
+		writeln("In_range ", owner.Position, " ", d);
+		if(d <= range + owner.Size) {
 			return true;
 		}
 		return false;
@@ -68,7 +72,7 @@ public:
 		if(state == Skillstate.STRIKE) {
 			al_draw_circle(strike_point.x, strike_point.y, radius, ALLEGRO_COLOR(1, 0, 0, 0.5), 1);
 		} else if(state == Skillstate.COOLDOWN && timer > 0) {
-			al_draw_circle(strike_point.x, strike_point.y, radius, ALLEGRO_COLOR(1, 0, 0, 1), 1);
+			al_draw_filled_circle(strike_point.x, strike_point.y, radius, ALLEGRO_COLOR(1, 0, 0, 1));
 		}
 	}
 
@@ -76,9 +80,13 @@ public:
 		target = s;
 	} 
 
-	void Owner(Mob s) @property {
+	Mob Owner() @property {
+		return owner;
+	}
+
+	void Owner(ref Mob s) @property {
 		owner = s;
-	} 
+	}
 
 	float Cooldowntime() const @property {
 		return cooldowntime;

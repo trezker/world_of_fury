@@ -4,6 +4,8 @@ import wof.vector2;
 import allegro5.allegro;
 import allegro5.allegro_primitives;
 import wof.skill;
+import wof.world;
+import std.stdio;
 
 class Mob {
 private:
@@ -16,7 +18,14 @@ private:
 	int health = 1;
 	int faction = 0;
 	Skill skill;
+	World world;
 public:
+	this(World w) {
+		world = w;
+		skill = new Skill;
+		skill.Owner = this;
+	}
+
 	void Update(float dt) {
 		if(target_mob) {
 			target_position = target_mob.Position;
@@ -30,10 +39,23 @@ public:
 		}
 		
 		position += velocity * dt;
+
+		if(skill.Is_ready) {// && faction == 1) { //Fungerar om villkoret faction är med. Någon mob påverkar det här...
+			if(target_mob is null) {
+				//Mob[] mobs = world.Get_area_mobs(position, size + skill.Range);
+			} else {
+				skill.Target = target_mob;
+			}
+			if(skill.In_range) {
+				skill.Apply();
+			}
+		}
+		skill.Update(dt);
 	}
 	
 	void Draw() const {
 		al_draw_circle(Position.x, Position.y, Size, color, 1);
+		skill.Draw();
 	}
 
 	Vector2 Position() const @property {
