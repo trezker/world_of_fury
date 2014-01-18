@@ -48,6 +48,14 @@ struct Vector2 {
 		assert(b.x == -4);
 		assert(b.y == -6);
 	}
+
+	ref Vector2 opOpAssign(string op)(in float rhs)
+        if (op == "*" || op == "/")
+    {
+		mixin("x" ~ op ~ "= rhs;");
+		mixin("y" ~ op ~ "= rhs;");
+        return this;
+    }
     
     float Length() const @property {
 		return sqrt(LengthSquared);

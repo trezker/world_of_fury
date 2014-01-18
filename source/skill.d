@@ -1,5 +1,10 @@
 module wof.skill;
 
+import wof.mob;
+import wof.vector2;
+import allegro5.allegro;
+import allegro5.allegro_primitives;
+
 enum Skillstate {
 	COOLDOWN,
 	STRIKE
@@ -12,40 +17,68 @@ private:
 	float range = 10;
 	float radius = 5;
 	
-	Skillstate state = COOLDOWN;
+	Skillstate state = Skillstate.COOLDOWN;
 	float timer = 0;
-	Vector2 target_position;
+	Mob target;
+	Mob owner;
+	Vector2 strike_point;
 public:
 	bool Is_ready() const @property {
-		if(state == COOLDOWN && timer <= 0) {
+		if(state == Skillstate.COOLDOWN && timer <= 0) {
 			return true;
 		}
 		return false;
+	}
+	
+	bool In_range() const @property {
+		float d = (target.Position - owner.Position).Length - owner.Size;
+		if(d <= range) {
+			return true;
+		}
+		return false;
+	}
+	
+	void Apply() {
+		if(!Is_ready)
+			return;
+		if(In_range) {
+			strike_point = target.Position;
+		} else {
+			Vector2 d = target.Position - owner.Position;
+			d.Normalize();
+			d *= range;
+			strike_point = owner.Position + d;
+		}
+		timer = striketime;
+		state = Skillstate.STRIKE;
 	}
 	
 	void Update(float dt) {
 		if(timer > 0) {
 			timer -= dt;
 		}
-		if(timer <= 0 && state == STRIKE) {
+		if(timer <= 0 && state == Skillstate.STRIKE) {
 			timer = cooldowntime;
-			state = COOLDOWN;
+			state = Skillstate.COOLDOWN;
 			//TODO: Execute skill effect
 		}
 	}
 	
 	void Draw() const {
-		if(state == STRIKE) {
-			al_draw_circle(target_position.x, target_position.y, radius, ALLEGRO_COLOR(1, 0, 0, 0.5), 1);
-		} else if(state == COOLDOWN && timer > 0) {
-			al_draw_circle(target_position.x, target_position.y, radius, ALLEGRO_COLOR(1, 0, 0, 1), 1);
+		if(state == Skillstate.STRIKE) {
+			al_draw_circle(strike_point.x, strike_point.y, radius, ALLEGRO_COLOR(1, 0, 0, 0.5), 1);
+		} else if(state == Skillstate.COOLDOWN && timer > 0) {
+			al_draw_circle(strike_point.x, strike_point.y, radius, ALLEGRO_COLOR(1, 0, 0, 1), 1);
 		}
 	}
 
-	float cooldowntime = 1;
-	float striketime = 1;
-	float range = 10;
-	float radius = 5;
+	void Target(Mob s) @property {
+		target = s;
+	} 
+
+	void Owner(Mob s) @property {
+		owner = s;
+	} 
 
 	float Cooldowntime() const @property {
 		return cooldowntime;
