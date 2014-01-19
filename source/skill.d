@@ -35,7 +35,6 @@ public:
 		if(target is null)
 			return false;
 		float d = (target.Position - owner.Position).Length;
-		writeln("In_range ", owner.Position, " ", d);
 		if(d <= range + owner.Size) {
 			return true;
 		}
@@ -84,7 +83,7 @@ public:
 		return owner;
 	}
 
-	void Owner(ref Mob s) @property {
+	void Owner(Mob s) @property {
 		owner = s;
 	}
 

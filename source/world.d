@@ -17,6 +17,7 @@ public:
 		player.Size = 10;
 		player.Faction = 1;
 		player.Color = ALLEGRO_COLOR(0, 0, 1, 1);
+		mobs~= player;
 	}
 	/* TODO: Basic behaviour, stats and abilities should all be the same for mob and player.
 	 * Controllers outside them will be sending overriding commands for the few things you need to separate one type from the other.
@@ -53,14 +54,11 @@ public:
 		foreach (ref m; mobs) {
 			m.Update(dt);
 		}
-		
-		player.Update(dt);
 	}
 	
 	void Draw() const {
 		foreach (m; mobs) {
 			m.Draw();
 		}
-		player.Draw();
 	}
 }

@@ -40,9 +40,20 @@ public:
 		
 		position += velocity * dt;
 
-		if(skill.Is_ready) {// && faction == 1) { //Fungerar om villkoret faction är med. Någon mob påverkar det här...
+		if(skill.Is_ready) {
 			if(target_mob is null) {
-				//Mob[] mobs = world.Get_area_mobs(position, size + skill.Range);
+				Mob[] mobs = world.Get_area_mobs(position, size + skill.Range);
+				foreach(m; mobs) {
+					if(m is this)
+						continue;
+					if(m.Faction == faction)
+						continue;
+					skill.Target = m;
+					if(skill.In_range) {
+						target_mob = m;
+						break;
+					}
+				}
 			} else {
 				skill.Target = target_mob;
 			}
