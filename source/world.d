@@ -15,6 +15,7 @@ public:
 	void Init() {
 		player = new Mob(this);
 		player.Size = 10;
+		player.Health = 10;
 		player.Faction = 1;
 		player.Color = ALLEGRO_COLOR(0, 0, 1, 1);
 		mobs~= player;
@@ -25,8 +26,8 @@ public:
 	void Handle_event(ALLEGRO_EVENT event) {
 		switch(event.type) {
 			case ALLEGRO_EVENT_MOUSE_BUTTON_DOWN: {
-				player.Target_position = Vector2(event.mouse.x, event.mouse.y);
 				player.Target_mob = null;
+				player.Target_position = Vector2(event.mouse.x, event.mouse.y);
 				foreach (m; mobs) {
 					if((m.Position - player.Target_position).Length() < m.Size) {
 						player.Target_mob = m;

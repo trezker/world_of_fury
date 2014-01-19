@@ -27,19 +27,25 @@ public:
 	}
 
 	void Update(float dt) {
-		if(target_mob) {
-			target_position = target_mob.Position;
-		}
-
-		Vector2 targetvector = target_position - position;
-		if(targetvector.Length < 1 || (target_mob !is null && targetvector.Length < target_mob.Size + size)) {
-			velocity = Vector2(0,0);
-		} else {
-			velocity = targetvector.Normalized * 100;
+		if(health <= 0) {
+			return;
 		}
 		
-		position += velocity * dt;
+		if(skill.Allows_moving) {
+			if(target_mob) {
+				target_position = target_mob.Position;
+			}
 
+			Vector2 targetvector = target_position - position;
+			if(targetvector.Length < 1 || (target_mob !is null && targetvector.Length < target_mob.Size + size)) {
+				velocity = Vector2(0,0);
+			} else {
+				velocity = targetvector.Normalized * 100;
+			}
+			
+			position += velocity * dt;
+		}
+		
 		if(skill.Is_ready) {
 			if(target_mob is null) {
 				Mob[] mobs = world.Get_area_mobs(position, size + skill.Range);
@@ -65,8 +71,12 @@ public:
 	}
 	
 	void Draw() const {
-		al_draw_circle(Position.x, Position.y, Size, color, 1);
-		skill.Draw();
+		if(health > 0) {
+			al_draw_circle(Position.x, Position.y, Size, color, 1);
+			skill.Draw();
+		}
+		else
+			al_draw_circle(Position.x, Position.y, Size, ALLEGRO_COLOR(0, 0, 0, 1), 1);
 	}
 
 	Vector2 Position() const @property {
@@ -115,5 +125,6 @@ public:
 
 	void Target_mob(Mob p) @property {
 		target_mob = p;
+		skill.Interrupt();
 	}
 }

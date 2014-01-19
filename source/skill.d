@@ -41,6 +41,19 @@ public:
 		return false;
 	}
 	
+	bool Allows_moving() const @property {
+		if(state == Skillstate.STRIKE)
+			return false;
+		return true;
+	}
+	
+	void Interrupt() {
+		if(state != Skillstate.COOLDOWN) {
+			timer = cooldowntime;
+			state = Skillstate.COOLDOWN;
+		}
+	}
+	
 	void Apply() {
 		if(!Is_ready)
 			return;
@@ -63,7 +76,7 @@ public:
 		if(timer <= 0 && state == Skillstate.STRIKE) {
 			timer = cooldowntime;
 			state = Skillstate.COOLDOWN;
-			//TODO: Execute skill effect
+			target.Health = target.Health - 1;
 		}
 	}
 	
