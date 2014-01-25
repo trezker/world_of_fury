@@ -50,6 +50,7 @@ public:
 			m.Position = Vector2(uniform(0.0, 800.0), uniform(0.0, 600.0));
 			m.Target_position = Vector2(uniform(0.0, 800.0), uniform(0.0, 600.0));
 			m.Size = 10;
+			m.Pursuit_range = 100;
 			mobs~= m;
 		}
 

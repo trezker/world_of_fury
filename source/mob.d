@@ -21,6 +21,7 @@ private:
 	float health_regen = 0;
 	float health_regen_rate = 1;
 	int faction = 0;
+	float pursuit_range = 0;
 	Skill skill;
 	World world;
 public:
@@ -43,6 +44,8 @@ public:
 			}
 		}
 		
+		bool keep_moving = false;
+		
 		if(skill.Allows_moving) {
 			if(target_mob) {
 				target_position = target_mob.Position;
@@ -51,8 +54,10 @@ public:
 			Vector2 targetvector = target_position - position;
 			if(targetvector.Length < 1 || (target_mob !is null && targetvector.Length < target_mob.Size + size)) {
 				velocity = Vector2(0,0);
+				keep_moving = false;
 			} else {
 				velocity = targetvector.Normalized * 100;
+				keep_moving = true;
 			}
 			
 			position += velocity * dt;
@@ -71,19 +76,23 @@ public:
 						continue;
 					if(m.Health <= 0)
 						continue;
+					if(pursuit_range > 0) {
+						float d = (m.Position - Position).Length;
+						if(d <= pursuit_range) {
+							target_mob = m;
+						}
+					}
 					skill.Target = m;
 					if(skill.In_range) {
-						target_mob = m;
 						break;
 					}
 				}
+			} else {
+				skill.Target = target_mob;
 			}
 			
-			if(target_mob !is null) {
-				skill.Target = target_mob;
-				if(skill.In_range) {
-					skill.Apply();
-				}
+			if(skill.In_range && !keep_moving) {
+				skill.Apply();
 			}
 		}
 		skill.Update(dt);
@@ -116,6 +125,14 @@ public:
 	
 	void Size(float s) @property {
 		size = s;
+	} 
+
+	float Pursuit_range() const @property {
+		return pursuit_range;
+	}
+	
+	void Pursuit_range(float s) @property {
+		pursuit_range = s;
 	} 
 
 	int Faction() const @property {
