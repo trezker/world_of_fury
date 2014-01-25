@@ -16,6 +16,7 @@ public:
 		player = new Mob(this);
 		player.Size = 10;
 		player.Health = 10;
+		player.Max_health = 10;
 		player.Faction = 1;
 		player.Color = ALLEGRO_COLOR(0, 0, 1, 1);
 		mobs~= player;

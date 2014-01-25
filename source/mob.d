@@ -6,6 +6,7 @@ import allegro5.allegro_primitives;
 import wof.skill;
 import wof.world;
 import std.stdio;
+import std.conv;
 
 class Mob {
 private:
@@ -16,6 +17,9 @@ private:
 	Mob target_mob;
 	float size = 1;
 	int health = 1;
+	int max_health = 1;
+	float health_regen = 0;
+	float health_regen_rate = 1;
 	int faction = 0;
 	Skill skill;
 	World world;
@@ -29,6 +33,14 @@ public:
 	void Update(float dt) {
 		if(health <= 0) {
 			return;
+		}
+		
+		if(health < max_health) {
+			health_regen += health_regen_rate * dt;
+			if(health_regen > 1) {
+				health += to!int(health_regen);
+				health_regen -= to!int(health_regen);
+			}
 		}
 		
 		if(skill.Allows_moving) {
@@ -47,6 +59,9 @@ public:
 		}
 		
 		if(skill.Is_ready) {
+			if(target_mob !is null && target_mob.Health <= 0)
+				target_mob = null;
+			
 			if(target_mob is null) {
 				Mob[] mobs = world.Get_area_mobs(position, size + skill.Range);
 				foreach(m; mobs) {
@@ -54,17 +69,21 @@ public:
 						continue;
 					if(m.Faction == faction)
 						continue;
+					if(m.Health <= 0)
+						continue;
 					skill.Target = m;
 					if(skill.In_range) {
 						target_mob = m;
 						break;
 					}
 				}
-			} else {
-				skill.Target = target_mob;
 			}
-			if(skill.In_range) {
-				skill.Apply();
+			
+			if(target_mob !is null) {
+				skill.Target = target_mob;
+				if(skill.In_range) {
+					skill.Apply();
+				}
 			}
 		}
 		skill.Update(dt);
@@ -113,6 +132,22 @@ public:
 	
 	void Health(int s) @property {
 		health = s;
+	}
+
+	int Max_health() const @property {
+		return max_health;
+	}
+	
+	void Max_health(int s) @property {
+		max_health = s;
+	}
+
+	float Health_regen_rate() const @property {
+		return health_regen_rate;
+	}
+	
+	void Health_regen_rate(float s) @property {
+		health_regen_rate = s;
 	}
 
 	Vector2 Target_position() const @property {
