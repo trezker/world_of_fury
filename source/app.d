@@ -5,9 +5,9 @@ import std.stdio;
 import allegro5.allegro;
 import allegro5.allegro_primitives;
 import allegro5.allegro_image;
+import allegro5.allegro_color;
 import allegro5.allegro_font;
 import allegro5.allegro_ttf;
-import allegro5.allegro_color;
 
 import wof.world;
 import std.stdio;
@@ -38,7 +38,6 @@ int main(char[][] args) {
 		al_register_event_source(queue, al_get_mouse_event_source());
 		al_register_event_source(queue, al_get_timer_event_source(timer));
 
-		ALLEGRO_FONT* font = al_load_font("data/DejaVuSans.ttf", 18, 0);
 
 		World world = new World;
 		world.Init();
