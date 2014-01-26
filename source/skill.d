@@ -76,7 +76,8 @@ public:
 		if(timer <= 0 && state == Skillstate.STRIKE) {
 			timer = cooldowntime;
 			state = Skillstate.COOLDOWN;
-			target.Health = target.Health - 1;
+			if(In_range)
+				target.Health = target.Health - 1;
 		}
 	}
 	
